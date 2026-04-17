@@ -20,7 +20,18 @@
       "Bash(npx tsc *)",
       "Bash(npx jest *)",
       "Bash(git init *)",
-      "Bash(node -e \"const pkg = require\\('./package.json'\\); console.log\\('jest:', pkg.devDependencies.jest, 'ts-jest:', pkg.devDependencies['ts-jest']\\)\")"
+      "Bash(node -e \"const pkg = require\\('./package.json'\\); console.log\\('jest:', pkg.devDependencies.jest, 'ts-jest:', pkg.devDependencies['ts-jest']\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(npm uninstall *)",
+      "Bash(node -e ' *)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --msg-filter 'sed \"/Co-[Aa]uthored-[Bb]y: Claude/d\"' -- --all)",
+      "Bash(git stash *)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
+    ],
+    "additionalDirectories": [
+      "D:\\MummyApp\\src\\app\\shop"
     ]
   }
 }

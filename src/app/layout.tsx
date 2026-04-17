@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Syne, Plus_Jakarta_Sans } from 'next/font/google'
+import { LangProvider } from '@/lib/lang'
 import './globals.css'
 
 const syne = Syne({
@@ -38,8 +39,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
-      <body className="font-jakarta bg-bg-dark text-white antialiased">
-        {children}
+      <body className="font-jakarta text-white antialiased">
+        <LangProvider>{children}</LangProvider>
       </body>
     </html>
   )
