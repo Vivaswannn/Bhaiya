@@ -1,5 +1,6 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { TopBar } from '@/components/layout/TopBar'
 import { BottomNav } from '@/components/layout/BottomNav'
 import { CategoryGrid } from '@/components/shop/CategoryGrid'
@@ -8,14 +9,20 @@ import { BhaiyaAudioButton } from '@/components/audio/BhaiyaAudioButton'
 import { getNearbyShops } from '@/lib/geo'
 import { Shop, Category } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
-import { useEffect } from 'react'
 
 export default function HomePage() {
+  const router = useRouter()
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [shops, setShops] = useState<Shop[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCat, setSelectedCat] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (!localStorage.getItem('bhaiya_onboarded')) {
+      router.push('/onboarding')
+    }
+  }, [])
 
   useEffect(() => {
     supabase.from('categories').select('*').order('sort_order').then(({ data }) => {
