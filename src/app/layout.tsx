@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from 'next'
 import { Syne, Plus_Jakarta_Sans } from 'next/font/google'
-import "./globals.css";
+import './globals.css'
 
 const syne = Syne({
   subsets: ['latin'],
@@ -15,20 +15,32 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "Bhaiya App — Find Shops Near You",
-  description: "Hyperlocal shop discovery PWA for Lucknow, India",
-};
+  title: 'Bhaiya App',
+  description: 'Naye sheher mein? Bhaiya hai na!',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Bhaiya App',
+  },
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  themeColor: '#7B5BFF',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="hi" className={`${syne.variable} ${jakarta.variable}`}>
-      <body className="antialiased">
+    <html lang="hi" className={`${syne.variable} ${jakarta.variable} dark`}>
+      <head>
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      </head>
+      <body className="font-jakarta bg-bg-dark text-white antialiased">
         {children}
       </body>
     </html>
-  );
+  )
 }
