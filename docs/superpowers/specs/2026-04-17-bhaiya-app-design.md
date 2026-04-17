@@ -29,6 +29,7 @@ Bhaiya App is a hyperlocal discovery PWA for people starting fresh in a new city
 | Maps | Leaflet.js + OpenStreetMap | Free, no API cost |
 | Database | Supabase (PostgreSQL + PostGIS) | Real geospatial queries ("find nearest shop within 500m"), open source, generous free tier |
 | Auth | Supabase Auth | Built-in, covers admin + contributors |
+| Storage | Supabase Storage | Shop photo uploads from "Add a Shop" form |
 | Audio | Web Speech API (browser TTS) | Free, no API cost, works offline |
 | Hosting | Vercel | Free tier, instant deploy, custom domain |
 | Icons | Custom inline SVG | Professional, no emoji, no dependencies |
@@ -293,7 +294,7 @@ Offline support: Service worker caches home screen + last-viewed shops.
 - [ ] Lucknow data: 3 areas, 50-80 verified shops
 - [ ] Dark mode + Light mode toggle
 - [ ] PWA manifest (installable on mobile)
-- [ ] Hindi + English UI
+- [ ] Bilingual UI — key labels in Hindi + English (not full i18n, just dual-label strings on categories, nav, CTAs, and status badges)
 
 ### Out of scope (post-funding)
 - User accounts / saved favourites
