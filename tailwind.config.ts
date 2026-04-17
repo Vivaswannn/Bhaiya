@@ -12,6 +12,8 @@ const config: Config = {
       colors: {
         violet: '#7B5BFF',
         'violet-dim': 'rgba(123,91,255,0.18)',
+        rose: '#FF4E8B',
+        cyan: '#00D9FF',
         'open-green': '#00dc64',
         'closed-red': '#ff7070',
         'bg-dark': '#07071c',

@@ -1,0 +1,127 @@
+<h2>Bhaiya App — Design Section 2: Data & Tech Architecture</h2>
+<p class="subtitle">What's under the hood — the database, the stack, the data plan</p>
+
+<div class="section">
+  <h3>🗄️ Database Schema (Supabase / PostgreSQL + PostGIS)</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px;">
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:14px;font-family:monospace;font-size:12px;">
+      <div style="color:#58a6ff;margin-bottom:8px;font-size:13px;font-weight:bold;">shops</div>
+      <div style="color:#8b949e;">id · uuid</div>
+      <div style="color:#e6edf3;">name · text</div>
+      <div style="color:#e6edf3;">category_id · uuid</div>
+      <div style="color:#f0a500;">location · geometry(Point)</div>
+      <div style="color:#e6edf3;">address · text</div>
+      <div style="color:#e6edf3;">phone · text</div>
+      <div style="color:#e6edf3;">opening_hours · jsonb</div>
+      <div style="color:#e6edf3;">area · text</div>
+      <div style="color:#e6edf3;">city · text</div>
+      <div style="color:#e6edf3;">audio_guide · text</div>
+      <div style="color:#3fb950;">verified · boolean</div>
+      <div style="color:#3fb950;">is_active · boolean</div>
+    </div>
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:14px;font-family:monospace;font-size:12px;">
+      <div style="color:#58a6ff;margin-bottom:8px;font-size:13px;font-weight:bold;">categories</div>
+      <div style="color:#8b949e;">id · uuid</div>
+      <div style="color:#e6edf3;">name_en · text</div>
+      <div style="color:#e6edf3;">name_hi · text</div>
+      <div style="color:#e6edf3;">icon · text (emoji)</div>
+      <div style="color:#e6edf3;">color · text</div>
+      <div style="color:#e6edf3;">osm_tags · jsonb</div>
+      <br/>
+      <div style="color:#58a6ff;margin-bottom:8px;font-size:13px;font-weight:bold;">contributions</div>
+      <div style="color:#8b949e;">id · uuid</div>
+      <div style="color:#e6edf3;">shop_data · jsonb</div>
+      <div style="color:#e6edf3;">submitted_by · text</div>
+      <div style="color:#f0a500;">status · pending/approved/rejected</div>
+    </div>
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:14px;font-size:12px;">
+      <div style="color:#58a6ff;margin-bottom:8px;font-size:13px;font-weight:bold;">🌍 PostGIS Magic</div>
+      <p style="color:#8b949e;margin:0 0 8px;">The geospatial superpower. One SQL query finds nearest shops:</p>
+      <div style="background:#161b22;padding:8px;border-radius:4px;font-family:monospace;color:#f0a500;font-size:11px;">
+        SELECT * FROM shops<br/>
+        ORDER BY location &lt;-&gt;<br/>
+        ST_Point(lng, lat)<br/>
+        LIMIT 10;
+      </div>
+      <p style="color:#8b949e;margin:8px 0 0;font-size:11px;">This is why we chose Supabase over Firebase — Firebase can't do this natively.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🏗️ Tech Stack</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;">
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:6px;padding:12px;">
+      <div style="font-size:18px;">⚛️</div>
+      <h3 style="font-size:13px;margin:4px 0;">Next.js 14</h3>
+      <p style="font-size:11px;color:#888;margin:0;">PWA support, App Router, fast pages, SEO</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:6px;padding:12px;">
+      <div style="font-size:18px;">🎨</div>
+      <h3 style="font-size:13px;margin:4px 0;">Tailwind CSS</h3>
+      <p style="font-size:11px;color:#888;margin:0;">Mobile-first beautiful UI, fast to build</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:6px;padding:12px;">
+      <div style="font-size:18px;">🗺️</div>
+      <h3 style="font-size:13px;margin:4px 0;">Leaflet.js</h3>
+      <p style="font-size:11px;color:#888;margin:0;">Free maps, OpenStreetMap tiles, no API cost</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:6px;padding:12px;">
+      <div style="font-size:18px;">🐘</div>
+      <h3 style="font-size:13px;margin:4px 0;">Supabase</h3>
+      <p style="font-size:11px;color:#888;margin:0;">PostgreSQL + PostGIS + Auth + Storage</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:6px;padding:12px;">
+      <div style="font-size:18px;">▲</div>
+      <h3 style="font-size:13px;margin:4px 0;">Vercel</h3>
+      <p style="font-size:11px;color:#888;margin:0;">Free hosting, instant deploy, custom domain</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:6px;padding:12px;">
+      <div style="font-size:18px;">🔊</div>
+      <h3 style="font-size:13px;margin:4px 0;">Web Speech API</h3>
+      <p style="font-size:11px;color:#888;margin:0;">Free browser TTS for Bhaiya audio guide</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📦 Lucknow Demo Data Plan</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <h3 style="font-size:13px;margin:0 0 8px;color:#f0a500;">Phase 1 — Import (Day 1)</h3>
+      <p style="font-size:12px;color:#888;margin:0;">Pull Lucknow shop data from OpenStreetMap Overpass API. Auto-import into Supabase. Gets us ~200-400 shops instantly, mostly in main areas.</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <h3 style="font-size:13px;margin:0 0 8px;color:#3fb950;">Phase 2 — Curate (Days 2-3)</h3>
+      <p style="font-size:12px;color:#888;margin:0;">You manually verify & enrich 3 Lucknow areas: <strong>Hazratganj, Gomti Nagar, Indira Nagar</strong>. Add phone numbers, hours, audio scripts for key shops.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🗂️ 20 Shop Categories</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🛒 Ration / Kirana</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🥦 Sabzi / Vegetables</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🥛 Milk / Dairy</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">💊 Medical / Pharmacy</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🔧 Hardware</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🐾 Pet Shop</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">✂️ Tailor</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">💈 Salon / Parlour</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">⚡ Electrician</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🔌 Plumber</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🍞 Bakery</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🍳 Tiffin / Dabba</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">👕 Laundry / Dhobi</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🏪 Stationery</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">⛽ LPG / Gas</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🚗 Mechanic</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">📱 Mobile Repair</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🏦 ATM / Bank</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🚌 Auto / Rickshaw Stand</span>
+    <span style="background:#1a1a2e;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:12px;">🏥 Doctor / Clinic</span>
+  </div>
+</div>
+
+<p style="margin-top:16px;font-size:13px;color:#888;">Does the tech stack and data plan look right? Any categories missing? Respond in terminal.</p>

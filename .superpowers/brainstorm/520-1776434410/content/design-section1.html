@@ -1,0 +1,57 @@
+<h2>Bhaiya App — Design Section 1: Core Concept & Screens</h2>
+<p class="subtitle">The full picture of what we're building for the Lucknow demo</p>
+
+<div class="section">
+  <h3>🎯 The Core Promise</h3>
+  <p>A hyperlocal discovery app that works like a trusted local bhaiya — finds small shops, gives you their number, tells you if they're open, and guides you there. Built for people starting fresh in a new city.</p>
+</div>
+
+<div class="section">
+  <h3>📱 The 7 Screens</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px;">
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <div style="font-size:22px;margin-bottom:6px;">1️⃣</div>
+      <h3 style="margin:0 0 4px;font-size:14px;">Splash / Onboarding</h3>
+      <p style="font-size:12px;color:#888;margin:0;">"Naye sheher mein? Bhaiya hai na!" — sets the emotional tone. City selector. Language toggle (Hindi/English).</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <div style="font-size:22px;margin-bottom:6px;">2️⃣</div>
+      <h3 style="margin:0 0 4px;font-size:14px;">Home</h3>
+      <p style="font-size:12px;color:#888;margin:0;">GPS-detected location. Search bar. Category grid (ration, sabzi, milk, hardware…). Nearby open shops strip.</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <div style="font-size:22px;margin-bottom:6px;">3️⃣</div>
+      <h3 style="margin:0 0 4px;font-size:14px;">Map View</h3>
+      <p style="font-size:12px;color:#888;margin:0;">Leaflet + OpenStreetMap. Colour-coded pins by category. Tap pin → mini shop card. "Nearest open" button.</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <div style="font-size:22px;margin-bottom:6px;">4️⃣</div>
+      <h3 style="margin:0 0 4px;font-size:14px;">Shop List</h3>
+      <p style="font-size:12px;color:#888;margin:0;">Category filtered. Sorted by distance. Open/closed badge. Distance in metres. Rating stars.</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <div style="font-size:22px;margin-bottom:6px;">5️⃣</div>
+      <h3 style="margin:0 0 4px;font-size:14px;">Shop Detail</h3>
+      <p style="font-size:12px;color:#888;margin:0;">Name, address, phone (tap to call), hours, open now badge. 🔊 Bhaiya Audio Guide button. Directions on map.</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <div style="font-size:22px;margin-bottom:6px;">6️⃣</div>
+      <h3 style="margin:0 0 4px;font-size:14px;">Add a Shop</h3>
+      <p style="font-size:12px;color:#888;margin:0;">Community contribution form. Drop pin on map. Fill details. Submitted for admin review. "Help your neighbours!"</p>
+    </div>
+    <div style="background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:14px;">
+      <div style="font-size:22px;margin-bottom:6px;">7️⃣</div>
+      <h3 style="margin:0 0 4px;font-size:14px;">Admin Panel</h3>
+      <p style="font-size:12px;color:#888;margin:0;">Review submitted shops. Approve / reject. Edit details. Bulk import from OpenStreetMap. Data dashboard.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🔊 The Bhaiya Audio Feature</h3>
+  <p>Uses the browser's built-in Web Speech API (free, no API cost). On the shop detail page, tapping <strong>"Bhaiya se puchho"</strong> plays a voice guide in Hindi:<br><br>
+  <em style="color:#f0a500;">"Seedha jaao 300 metre, phir left lena. Wahan ek red building hai — uske paas Sharma General Store milega. Subah 8 baje se raat 9 baje tak khula rehta hai."</em><br><br>
+  For demo: pre-scripted for 10 key shops in Lucknow. Post-funding: AI-generated for all shops.</p>
+</div>
+
+<p style="margin-top:16px;font-size:13px;color:#888;">Does this overall structure look right? Respond in terminal to confirm or suggest changes.</p>

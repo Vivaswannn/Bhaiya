@@ -1,0 +1,63 @@
+<h2>Bhaiya App — Architecture Approaches</h2>
+<p class="subtitle">Three ways to build it. Pick the one that feels right.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>React PWA + Firebase</h3>
+      <p><strong>Fast to build, easy to demo.</strong> Google Firebase handles database, auth, real-time updates, and hosting all-in-one. No backend server to manage.</p>
+      <ul style="margin-top:8px;padding-left:16px;font-size:13px;color:#888;">
+        <li>Frontend: React + Vite + Tailwind CSS</li>
+        <li>Database: Firebase Firestore (NoSQL)</li>
+        <li>Maps: Leaflet + OpenStreetMap (free)</li>
+        <li>Auth: Firebase Auth</li>
+        <li>Hosting: Firebase Hosting (free tier)</li>
+      </ul>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Fastest to build</li><li>No server management</li><li>Free tier generous</li><li>Real-time sync built-in</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Geospatial queries limited</li><li>Firebase lock-in</li><li>Complex queries harder</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Next.js PWA + Supabase ⭐ Recommended</h3>
+      <p><strong>Best balance of speed and power.</strong> Supabase gives you PostgreSQL with PostGIS (real geospatial queries — "find shops within 500m"), built-in auth, and a generous free tier.</p>
+      <ul style="margin-top:8px;padding-left:16px;font-size:13px;color:#888;">
+        <li>Frontend: Next.js 14 + Tailwind CSS</li>
+        <li>Database: Supabase (PostgreSQL + PostGIS)</li>
+        <li>Maps: Leaflet + OpenStreetMap (free)</li>
+        <li>Auth: Supabase Auth</li>
+        <li>Hosting: Vercel (free tier)</li>
+      </ul>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Real "find nearest shop" queries</li><li>Open source, no lock-in</li><li>SEO + PWA built-in with Next.js</li><li>Free tier covers demo perfectly</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Slightly more setup than Firebase</li><li>PostgreSQL knowledge needed</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>React PWA + ASP.NET Core + SQL Server</h3>
+      <p><strong>You already know this stack from CapFinLoan.</strong> Full microservices approach, maximum control, enterprise-grade.</p>
+      <ul style="margin-top:8px;padding-left:16px;font-size:13px;color:#888;">
+        <li>Frontend: React + Vite + Tailwind CSS</li>
+        <li>Backend: ASP.NET Core .NET 10</li>
+        <li>Database: SQL Server + EF Core</li>
+        <li>Maps: Leaflet + OpenStreetMap (free)</li>
+        <li>Hosting: Azure / Docker</li>
+      </ul>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>You know this stack well</li><li>Maximum flexibility</li><li>Enterprise credibility</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Slowest to build</li><li>Overkill for a demo</li><li>Hosting costs money</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:20px;font-size:13px;color:#888;">👆 My recommendation is <strong>B — Next.js + Supabase</strong>. Real geospatial queries are the core of this app, and Supabase's PostGIS makes "find the nearest open ration shop" trivial to build. Click to select.</p>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bhaiya App — Production UI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --violet: #7B5BFF;
+  --violet-dim: rgba(123,91,255,0.18);
+  --violet-border: rgba(123,91,255,0.3);
+  --rose: #FF4E8B;
+  --cyan: #00D9FF;
+}
+
+body {
+  background: #06060f;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  padding: 48px 24px 72px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Noise grain overlay ── */
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:0; opacity:.5;
+}
+
+/* ── Background orbs ── */
+.orbs { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.orb {
+  position:absolute; border-radius:50%;
+  filter: blur(100px);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.orb-1 { width:600px; height:600px; background:radial-gradient(circle, rgba(123,91,255,.22) 0%, transparent 70%); top:-150px; left:-100px; animation-duration:20s; }
+.orb-2 { width:450px; height:450px; background:radial-gradient(circle, rgba(255,78,139,.14) 0%, transparent 70%); top:300px; right:-80px; animation-duration:25s; animation-delay:-8s; }
+.orb-3 { width:350px; height:350px; background:radial-gradient(circle, rgba(0,217,255,.08) 0%, transparent 70%); bottom:0; left:35%; animation-duration:22s; animation-delay:-4s; }
+@keyframes drift { from{transform:translate(0,0) scale(1);} to{transform:translate(30px,20px) scale(1.08);} }
+
+/* ── Page header ── */
+.page-wrap { position:relative; z-index:1; }
+.page-title {
+  text-align:center; margin-bottom:10px;
+  font-family:'Syne',sans-serif; font-size:26px; font-weight:800; letter-spacing:-0.5px;
+  background:linear-gradient(135deg,#fff 0%, rgba(180,150,255,.75) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.page-sub { text-align:center; color:rgba(255,255,255,.3); font-size:13px; margin-bottom:48px; }
+
+/* ── Mode toggle ── */
+.mode-toggle {
+  display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:44px;
+}
+.toggle-label { font-size:12px; font-weight:600; color:rgba(255,255,255,.4); letter-spacing:.5px; text-transform:uppercase; }
+.toggle-track {
+  width:52px; height:28px; border-radius:14px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+  position:relative; cursor:pointer; transition:background .3s;
+}
+.toggle-track.on { background:var(--violet-dim); border-color:var(--violet-border); }
+.toggle-thumb {
+  position:absolute; top:3px; left:3px;
+  width:22px; height:22px; border-radius:50%;
+  background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.4);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.toggle-track.on .toggle-thumb { transform:translateX(24px); background:var(--violet); }
+
+/* ── Phones layout ── */
+.phones-row {
+  display:flex; gap:60px; justify-content:center; align-items:flex-start; flex-wrap:wrap;
+}
+.phone-col { display:flex; flex-direction:column; align-items:center; gap:20px; }
+.mode-badge {
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+  color:rgba(255,255,255,.3); display:flex; align-items:center; gap:7px;
+}
+.mode-badge::before {
+  content:''; width:6px; height:6px; border-radius:50%;
+  background:var(--violet); box-shadow:0 0 8px var(--violet);
+}
+.mode-badge.light::before { background:#f59e0b; box-shadow:0 0 8px #f59e0b; }
+
+/* ── Phone shell ── */
+.phone-shell {
+  width:260px; height:540px;
+  background:linear-gradient(160deg,#18182a 0%,#0e0e1a 100%);
+  border-radius:44px;
+  border:1.5px solid rgba(255,255,255,.07);
+  padding:9px;
+  box-shadow:0 50px 100px rgba(0,0,0,.75), 0 0 0 0 transparent, inset 0 1px 0 rgba(255,255,255,.06);
+  position:relative;
+  transition:box-shadow .4s;
+}
+.phone-shell:hover { box-shadow:0 60px 120px rgba(0,0,0,.8), 0 0 40px rgba(123,91,255,.12); }
+.phone-shell.light-shell {
+  background:linear-gradient(160deg,#f0eff8 0%,#e8e6f5 100%);
+  border-color:rgba(0,0,0,.08);
+}
+
+/* notch */
+.phone-shell::before {
+  content:''; position:absolute; top:9px; left:50%; transform:translateX(-50%);
+  width:84px; height:26px;
+  background:linear-gradient(160deg,#18182a,#0e0e1a);
+  border-radius:0 0 18px 18px; z-index:20;
+}
+.phone-shell.light-shell::before { background:linear-gradient(160deg,#f0eff8,#e8e6f5); }
+
+.phone-screen {
+  width:100%; height:100%;
+  border-radius:36px;
+  overflow:hidden;
+  position:relative;
+}
+
+/* ════════════════════════════════════════════════
+   DARK SCREEN
+════════════════════════════════════════════════ */
+.dark-screen { background:#07071c; }
+
+.dark-screen .bg-mesh {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 65% 0%, rgba(123,91,255,.4) 0%, transparent 55%),
+    radial-gradient(ellipse at 5% 75%, rgba(255,78,139,.18) 0%, transparent 45%);
+}
+
+.dark-screen .status {
+  position:relative; z-index:2;
+  display:flex; justify-content:space-between;
+  padding:30px 20px 0;
+  font-size:9px; font-weight:600; color:rgba(255,255,255,.45);
+}
+
+.dark-screen .topbar {
+  position:relative; z-index:2;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 20px 0;
+}
+.dark-screen .logo {
+  font-family:'Syne',sans-serif; font-size:19px; font-weight:800; letter-spacing:-.5px;
+  background:linear-gradient(135deg,#fff 0%,rgba(180,150,255,.8) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.dark-screen .notif-btn {
+  width:30px; height:30px; border-radius:9px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  display:flex; align-items:center; justify-content:center;
+}
+
+.dark-screen .loc-chip {
+  position:relative; z-index:2;
+  margin:10px 20px 0;
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(123,91,255,.12);
+  border:1px solid rgba(123,91,255,.25);
+  border-radius:20px; padding:5px 12px;
+  backdrop-filter:blur(12px);
+}
+.dark-screen .loc-chip .loc-text { font-size:9px; font-weight:600; color:rgba(255,255,255,.65); }
+.dark-screen .loc-chip .chevron { color:rgba(255,255,255,.3); font-size:8px; }
+
+.dark-screen .search-bar {
+  position:relative; z-index:2;
+  margin:10px 20px 0;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px; padding:10px 14px;
+  display:flex; align-items:center; gap:9px;
+  backdrop-filter:blur(24px);
+}
+.dark-screen .search-bar .s-text { font-size:10px; color:rgba(255,255,255,.28); flex:1; }
+.dark-screen .search-bar .mic-btn {
+  width:22px; height:22px; border-radius:50%;
+  background:rgba(123,91,255,.2);
+  border:1px solid rgba(123,91,255,.3);
+  display:flex; align-items:center; justify-content:center;
+}
+
+.dark-screen .section-hdr {
+  position:relative; z-index:2;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:13px 20px 8px;
+}
+.dark-screen .sec-title { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:rgba(255,255,255,.3); }
+.dark-screen .sec-all { font-size:9px; font-weight:600; color:#9b7dff; }
+
+.dark-screen .cat-grid {
+  position:relative; z-index:2;
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:7px; padding:0 20px;
+}
+.dark-screen .cat-cell {
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:13px; padding:9px 4px 7px;
+  text-align:center; backdrop-filter:blur(12px);
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+.dark-screen .cat-cell.active {
+  background:rgba(123,91,255,.2);
+  border-color:rgba(123,91,255,.45);
+}
+.dark-screen .cat-lbl { font-size:8px; font-weight:600; color:rgba(255,255,255,.45); }
+.dark-screen .cat-cell.active .cat-lbl { color:rgba(180,150,255,.9); }
+.dark-screen .cat-icon-wrap { width:26px; height:26px; display:flex; align-items:center; justify-content:center; }
+
+.dark-screen .shop-list {
+  position:relative; z-index:2;
+  padding:0 20px; display:flex; flex-direction:column; gap:7px;
+}
+.dark-screen .shop-card {
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:15px; padding:10px 12px;
+  display:flex; align-items:center; gap:10px;
+  backdrop-filter:blur(20px);
+}
+.dark-screen .shop-icon-bg {
+  width:36px; height:36px; border-radius:11px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.dark-screen .shop-name { font-size:10px; font-weight:700; color:#fff; }
+.dark-screen .shop-meta { font-size:8px; color:rgba(255,255,255,.35); margin-top:2px; }
+.dark-screen .open-tag {
+  margin-left:auto; flex-shrink:0;
+  font-size:7px; font-weight:700;
+  background:rgba(0,220,100,.12); color:#00dc64;
+  border:1px solid rgba(0,220,100,.22);
+  border-radius:20px; padding:2px 7px;
+}
+.dark-screen .closed-tag {
+  margin-left:auto; flex-shrink:0;
+  font-size:7px; font-weight:700;
+  background:rgba(255,100,100,.1); color:#ff7070;
+  border:1px solid rgba(255,100,100,.2);
+  border-radius:20px; padding:2px 7px;
+}
+
+.dark-screen .audio-card {
+  position:relative; z-index:2;
+  margin:8px 20px 0;
+  background:linear-gradient(135deg, rgba(123,91,255,.18) 0%, rgba(255,78,139,.1) 100%);
+  border:1px solid rgba(123,91,255,.3);
+  border-radius:15px; padding:10px 14px;
+  display:flex; align-items:center; gap:10px;
+  backdrop-filter:blur(12px);
+}
+.dark-screen .audio-text { font-size:9px; font-weight:700; color:rgba(200,180,255,.9); }
+.dark-screen .audio-sub { font-size:8px; color:rgba(255,255,255,.3); margin-top:1px; }
+.dark-screen .play-btn {
+  margin-left:auto;
+  width:24px; height:24px; border-radius:50%;
+  background:rgba(123,91,255,.35);
+  border:1px solid rgba(123,91,255,.5);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+
+.dark-screen .bottomnav {
+  position:absolute; bottom:0; left:0; right:0; z-index:10;
+  background:rgba(7,7,28,.88); backdrop-filter:blur(24px);
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex; padding:10px 0 18px;
+}
+.dark-screen .nav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.dark-screen .nav-lbl { font-size:8px; font-weight:600; color:rgba(255,255,255,.28); }
+.dark-screen .nav-item.active .nav-lbl { color:#9b7dff; }
+.dark-screen .nav-dot { width:4px; height:4px; border-radius:50%; background:#9b7dff; margin:0 auto; }
+
+/* ════════════════════════════════════════════════
+   LIGHT SCREEN
+════════════════════════════════════════════════ */
+.light-screen { background:#f5f4fe; }
+
+.light-screen .hero {
+  background:linear-gradient(160deg,#1e0a4a 0%,#2d1472 50%,#1a0f5e 100%);
+  padding:28px 20px 26px;
+  position:relative; overflow:hidden;
+}
+.light-screen .hero-glow {
+  position:absolute; width:220px; height:220px; border-radius:50%;
+  top:-60px; right:-40px;
+  background:radial-gradient(circle,rgba(123,91,255,.5) 0%,transparent 70%);
+}
+.light-screen .hero-glow2 {
+  position:absolute; width:160px; height:160px; border-radius:50%;
+  bottom:-40px; left:0;
+  background:radial-gradient(circle,rgba(0,200,255,.25) 0%,transparent 70%);
+}
+.light-screen .hero-status {
+  position:relative; z-index:2;
+  display:flex; justify-content:space-between;
+  font-size:9px; font-weight:600; color:rgba(255,255,255,.5);
+  margin-bottom:10px;
+}
+.light-screen .hero-top {
+  position:relative; z-index:2;
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:10px;
+}
+.light-screen .logo {
+  font-family:'Syne',sans-serif; font-size:18px; font-weight:800; color:#fff; letter-spacing:-.5px;
+}
+.light-screen .logo span { color:#c4b0ff; font-weight:600; }
+.light-screen .notif {
+  width:28px; height:28px; border-radius:9px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.2);
+  display:flex; align-items:center; justify-content:center;
+}
+.light-screen .loc-line { position:relative; z-index:2; }
+.light-screen .loc-small { font-size:9px; color:rgba(255,255,255,.5); font-weight:500; margin-bottom:2px; }
+.light-screen .loc-name { font-size:13px; font-weight:800; color:#fff; }
+
+.light-screen .search-float {
+  position:relative; z-index:2;
+  margin:12px 0 0;
+  background:rgba(255,255,255,.95);
+  border-radius:14px; padding:9px 14px;
+  display:flex; align-items:center; gap:9px;
+  box-shadow:0 10px 30px rgba(30,10,74,.35);
+}
+.light-screen .sf-text { font-size:10px; color:#bbb; flex:1; }
+.light-screen .sf-mic {
+  width:22px; height:22px; border-radius:50%;
+  background:#ede8ff; display:flex; align-items:center; justify-content:center;
+}
+
+.light-screen .body { background:#f5f4fe; padding:12px 0 70px; }
+.light-screen .sec-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 20px 8px;
+}
+.light-screen .sec-t { font-size:10px; font-weight:800; color:#1a1035; text-transform:uppercase; letter-spacing:.5px; }
+.light-screen .sec-a { font-size:9px; font-weight:700; color:#7B5BFF; }
+
+.light-screen .cat-scroll {
+  display:flex; gap:8px; padding:0 20px 14px; overflow:hidden;
+}
+.light-screen .cat-pill {
+  flex-shrink:0; display:flex; align-items:center; gap:6px;
+  background:#fff; border-radius:22px; padding:7px 13px;
+  font-size:10px; font-weight:700; color:#2d1472;
+  box-shadow:0 2px 12px rgba(0,0,0,.07);
+  border:1px solid transparent;
+}
+.light-screen .cat-pill.active {
+  background:linear-gradient(135deg,#6B3DFF,#9B7DFF);
+  color:#fff; box-shadow:0 6px 18px rgba(107,61,255,.35);
+  border-color:transparent;
+}
+
+.light-screen .shop-stack {
+  padding:0 20px; display:flex; flex-direction:column; gap:8px;
+}
+.light-screen .lcard {
+  background:#fff; border-radius:16px; padding:10px 12px;
+  display:flex; align-items:center; gap:10px;
+  box-shadow:0 2px 16px rgba(45,20,114,.07);
+  border:1px solid rgba(107,61,255,.06);
+}
+.light-screen .lcard-icon {
+  width:38px; height:38px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.light-screen .lcard-name { font-size:11px; font-weight:700; color:#1a1035; }
+.light-screen .lcard-meta { font-size:9px; color:#9991b5; margin-top:2px; }
+.light-screen .lopen {
+  margin-left:auto; flex-shrink:0;
+  font-size:8px; font-weight:700; background:#ecfdf5; color:#059669;
+  border-radius:20px; padding:3px 8px;
+}
+
+.light-screen .audio-bar {
+  margin:10px 20px 0;
+  background:linear-gradient(135deg,#f0ebff,#e8e2fc);
+  border:1px solid rgba(123,91,255,.18);
+  border-radius:14px; padding:9px 14px;
+  display:flex; align-items:center; gap:10px;
+}
+.light-screen .ab-text { font-size:9px; font-weight:700; color:#4a2bc2; }
+.light-screen .ab-sub { font-size:8px; color:#9991b5; margin-top:1px; }
+.light-screen .ab-play {
+  margin-left:auto;
+  width:24px; height:24px; border-radius:50%;
+  background:#7B5BFF; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(123,91,255,.4);
+}
+
+.light-screen .bottomnav {
+  position:absolute; bottom:0; left:0; right:0;
+  background:rgba(245,244,254,.95); backdrop-filter:blur(16px);
+  border-top:1px solid rgba(0,0,0,.06);
+  display:flex; padding:8px 0 16px;
+  box-shadow:0 -6px 24px rgba(45,20,114,.07);
+}
+.light-screen .lnav {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.light-screen .lnav-lbl { font-size:8px; font-weight:600; color:#c0bbd8; }
+.light-screen .lnav.active .lnav-lbl { color:#7B5BFF; }
+
+/* ── SVG icon colors ── */
+.ic-violet { color:#9b7dff; }
+.ic-green  { color:#00dc64; }
+.ic-blue   { color:#38bdf8; }
+.ic-rose   { color:#fb7185; }
+.ic-amber  { color:#fbbf24; }
+.ic-teal   { color:#2dd4bf; }
+.ic-peach  { color:#fb923c; }
+.ic-white  { color:rgba(255,255,255,.6); }
+
+/* light icon bg */
+.ibg-v { background:rgba(123,91,255,.12); }
+.ibg-g { background:rgba(0,220,100,.1); }
+.ibg-b { background:rgba(56,189,248,.12); }
+.ibg-r { background:rgba(251,113,133,.12); }
+.ibg-a { background:rgba(251,191,36,.12); }
+.ibg-t { background:rgba(45,212,191,.12); }
+.ibg-o { background:rgba(251,146,60,.12); }
+
+/* light mode icon bg (stronger) */
+.libg-v { background:#ede8ff; }
+.libg-g { background:#dcfce7; }
+.libg-b { background:#e0f2fe; }
+.libg-r { background:#ffe4e6; }
+.libg-a { background:#fef9c3; }
+.libg-t { background:#ccfbf1; }
+.libg-o { background:#ffedd5; }
+
+/* ── Style label under phone ── */
+.style-cap { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:rgba(255,255,255,.55); text-align:center; }
+.style-sub  { font-size:11px; color:rgba(255,255,255,.25); text-align:center; max-width:240px; line-height:1.5; }
+
+.footer-note { text-align:center; color:rgba(255,255,255,.25); font-size:12px; margin-top:48px; }
+</style>
+</head>
+<body>
+<div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+
+<div class="page-wrap">
+  <h1 class="page-title">Bhaiya App — Production UI</h1>
+  <p class="page-sub">Professional icons · Glassmorphism · Dark & Light · Production-grade</p>
+
+  <div class="phones-row">
+
+    <!-- ══════════ DARK MODE ══════════ -->
+    <div class="phone-col">
+      <div class="mode-badge">Dark Mode</div>
+      <div class="phone-shell">
+        <div class="phone-screen dark-screen">
+          <div class="bg-mesh"></div>
+
+          <div class="status">
+            <span>9:41</span>
+            <span style="display:flex;gap:4px;align-items:center;">
+              <!-- signal -->
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><rect x="0" y="5" width="2" height="5" fill="rgba(255,255,255,.5)" rx="1"/><rect x="3" y="3" width="2" height="7" fill="rgba(255,255,255,.5)" rx="1"/><rect x="6" y="1" width="2" height="9" fill="rgba(255,255,255,.7)" rx="1"/><rect x="9" y="0" width="2" height="10" fill="rgba(255,255,255,.9)" rx="1"/></svg>
+              <!-- wifi -->
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M7 8.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" fill="rgba(255,255,255,.9)"/><path d="M4.2 6.8a4 4 0 0 1 5.6 0" stroke="rgba(255,255,255,.8)" stroke-width="1.2" stroke-linecap="round"/><path d="M1.8 4.4a7 7 0 0 1 10.4 0" stroke="rgba(255,255,255,.5)" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <!-- battery -->
+              <svg width="22" height="11" viewBox="0 0 22 11" fill="none"><rect x=".5" y=".5" width="18" height="10" rx="2.5" stroke="rgba(255,255,255,.6)" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" fill="rgba(255,255,255,.9)"/><path d="M20 3.5v4a1.5 1.5 0 0 0 0-4z" fill="rgba(255,255,255,.5)"/></svg>
+            </span>
+          </div>
+
+          <div class="topbar">
+            <div class="logo">Bhaiya App</div>
+            <div class="notif-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+          </div>
+
+          <div class="loc-chip">
+            <svg width="9" height="11" viewBox="0 0 12 14" fill="none"><path d="M6 0C3.24 0 1 2.24 1 5c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5zm0 6.5A1.5 1.5 0 1 1 6 3.5a1.5 1.5 0 0 1 0 3z" fill="rgba(123,91,255,.9)"/></svg>
+            <span class="loc-text">Hazratganj, Lucknow</span>
+            <svg class="chevron" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"><path d="M3 4.5l3 3 3-3"/></svg>
+          </div>
+
+          <div class="search-bar">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <span class="s-text">Kya dhundh rahe ho?</span>
+            <div class="mic-btn">
+              <svg width="9" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(123,91,255,.9)" stroke-width="2.5" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </div>
+          </div>
+
+          <div class="section-hdr">
+            <span class="sec-title">Categories</span>
+            <span class="sec-all">Sab dekho →</span>
+          </div>
+
+          <div class="cat-grid">
+            <!-- Ration -->
+            <div class="cat-cell active">
+              <div class="cat-icon-wrap ic-violet">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              </div>
+              <span class="cat-lbl">Ration</span>
+            </div>
+            <!-- Sabzi -->
+            <div class="cat-cell">
+              <div class="cat-icon-wrap ic-green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22V12"/><path d="M5 12c0-4.4 3.1-8 7-8 3.9 0 7 3.6 7 8H5z"/><path d="M5 12c-2.2 0-4-1.8-4-4C1 5.8 2.8 4 5 4h0c1 0 2 .4 2.7 1"/></svg>
+              </div>
+              <span class="cat-lbl">Sabzi</span>
+            </div>
+            <!-- Milk -->
+            <div class="cat-cell">
+              <div class="cat-icon-wrap ic-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 2h8l2 4v14a2 2 0 01-2 2H8a2 2 0 01-2-2V6l2-4z"/><path d="M6 6h12"/><path d="M12 11v6"/><path d="M9 13.5h6"/></svg>
+              </div>
+              <span class="cat-lbl">Milk</span>
+            </div>
+            <!-- Medical -->
+            <div class="cat-cell">
+              <div class="cat-icon-wrap ic-rose">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <span class="cat-lbl">Medical</span>
+            </div>
+            <!-- Hardware -->
+            <div class="cat-cell">
+              <div class="cat-icon-wrap ic-amber">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+              </div>
+              <span class="cat-lbl">Hardware</span>
+            </div>
+            <!-- Tailor -->
+            <div class="cat-cell">
+              <div class="cat-icon-wrap ic-teal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+              </div>
+              <span class="cat-lbl">Tailor</span>
+            </div>
+            <!-- Pet -->
+            <div class="cat-cell">
+              <div class="cat-icon-wrap ic-peach">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 2.261M14 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 2.261"/><path d="M8 14c.5 2.5 2 4 4 4s3.5-1.5 4-4c.667-3.5-1-6-4-6s-4.667 2.5-4 6z"/></svg>
+              </div>
+              <span class="cat-lbl">Pet</span>
+            </div>
+            <!-- More -->
+            <div class="cat-cell">
+              <div class="cat-icon-wrap ic-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+              </div>
+              <span class="cat-lbl">More</span>
+            </div>
+          </div>
+
+          <div class="section-hdr" style="padding-top:11px;">
+            <span class="sec-title">Aas-paas khule hain</span>
+          </div>
+
+          <div class="shop-list">
+            <div class="shop-card">
+              <div class="shop-icon-bg ibg-v ic-violet">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              </div>
+              <div>
+                <div class="shop-name">Sharma General Store</div>
+                <div class="shop-meta">120m · ⭐ 4.8 · 0522-234567</div>
+              </div>
+              <span class="open-tag">KHULA</span>
+            </div>
+            <div class="shop-card">
+              <div class="shop-icon-bg ibg-g ic-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22V12"/><path d="M5 12c0-4.4 3.1-8 7-8 3.9 0 7 3.6 7 8H5z"/></svg>
+              </div>
+              <div>
+                <div class="shop-name">Ram Sabziwala</div>
+                <div class="shop-meta">200m · ⭐ 4.6 · 9876543210</div>
+              </div>
+              <span class="open-tag">KHULA</span>
+            </div>
+            <div class="shop-card">
+              <div class="shop-icon-bg ibg-r ic-rose">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div>
+                <div class="shop-name">Apollo Pharmacy</div>
+                <div class="shop-meta">450m · ⭐ 4.9 · 24 Ghante</div>
+              </div>
+              <span class="closed-tag">BAND</span>
+            </div>
+          </div>
+
+          <div class="audio-card">
+            <div style="width:28px;height:28px;border-radius:9px;background:rgba(123,91,255,.25);border:1px solid rgba(123,91,255,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c4b0ff" stroke-width="2.5" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+            </div>
+            <div>
+              <div class="audio-text">Bhaiya se puchho 🔊</div>
+              <div class="audio-sub">Audio guide suniye — Hindi mein</div>
+            </div>
+            <div class="play-btn">
+              <svg width="9" height="10" viewBox="0 0 10 12" fill="#c4b0ff"><path d="M1 1l8 5-8 5V1z"/></svg>
+            </div>
+          </div>
+
+          <div class="bottomnav">
+            <div class="nav-item active">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9b7dff" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span class="nav-lbl" style="color:#9b7dff;">Home</span>
+              <div class="nav-dot"></div>
+            </div>
+            <div class="nav-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              <span class="nav-lbl">Naksha</span>
+            </div>
+            <div class="nav-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <span class="nav-lbl">Dhundho</span>
+            </div>
+            <div class="nav-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              <span class="nav-lbl">Jodo</span>
+            </div>
+          </div>
+        </div><!-- /dark-screen -->
+      </div>
+      <div class="style-cap">Midnight Violet</div>
+      <div class="style-sub">Glassmorphism · Purple orb glow · SVG icons</div>
+    </div>
+
+    <!-- ══════════ LIGHT MODE ══════════ -->
+    <div class="phone-col">
+      <div class="mode-badge light">Light Mode</div>
+      <div class="phone-shell light-shell">
+        <div class="phone-screen light-screen">
+          <div class="hero">
+            <div class="hero-glow"></div><div class="hero-glow2"></div>
+            <div class="hero-status"><span>9:41</span><span>100% 🔋</span></div>
+            <div class="hero-top">
+              <div class="logo">Bhaiya<span> App</span></div>
+              <div class="notif">
+                <svg width="13" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              </div>
+            </div>
+            <div class="loc-line">
+              <div class="loc-small">📍 Aapki location</div>
+              <div class="loc-name">Gomti Nagar, Lucknow</div>
+            </div>
+            <div class="search-float">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9991b5" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <span class="sf-text">Kya dhundh rahe ho?</span>
+              <div class="sf-mic">
+                <svg width="10" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B5BFF" stroke-width="2.5" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="body">
+            <div class="sec-row" style="padding-top:2px;"><span class="sec-t">Categories</span><span class="sec-a">Sab dekho →</span></div>
+            <div class="cat-scroll">
+              <div class="cat-pill active">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Ration
+              </div>
+              <div class="cat-pill">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2d1472" stroke-width="2" stroke-linecap="round"><path d="M12 22V12"/><path d="M5 12c0-4.4 3.1-8 7-8 3.9 0 7 3.6 7 8H5z"/></svg>
+                Sabzi
+              </div>
+              <div class="cat-pill">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2d1472" stroke-width="2" stroke-linecap="round"><path d="M8 2h8l2 4v14a2 2 0 01-2 2H8a2 2 0 01-2-2V6l2-4z"/><path d="M6 6h12"/></svg>
+                Milk
+              </div>
+              <div class="cat-pill">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2d1472" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                Medical
+              </div>
+            </div>
+
+            <div class="sec-row"><span class="sec-t">Aas-paas khule hain</span></div>
+            <div class="shop-stack">
+              <div class="lcard">
+                <div class="lcard-icon libg-v">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7B5BFF" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                </div>
+                <div>
+                  <div class="lcard-name">Sharma General Store</div>
+                  <div class="lcard-meta">120m · ⭐ 4.8 · 0522-234567</div>
+                </div>
+                <span class="lopen">KHULA</span>
+              </div>
+              <div class="lcard">
+                <div class="lcard-icon libg-g">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round"><path d="M12 22V12"/><path d="M5 12c0-4.4 3.1-8 7-8 3.9 0 7 3.6 7 8H5z"/></svg>
+                </div>
+                <div>
+                  <div class="lcard-name">Ram Sabziwala</div>
+                  <div class="lcard-meta">200m · ⭐ 4.6 · 9876543210</div>
+                </div>
+                <span class="lopen">KHULA</span>
+              </div>
+              <div class="lcard">
+                <div class="lcard-icon libg-b">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="1.8" stroke-linecap="round"><path d="M8 2h8l2 4v14a2 2 0 01-2 2H8a2 2 0 01-2-2V6l2-4z"/><path d="M6 6h12"/><path d="M12 11v6"/><path d="M9 13.5h6"/></svg>
+                </div>
+                <div>
+                  <div class="lcard-name">Gupta Dairy</div>
+                  <div class="lcard-meta">350m · ⭐ 4.5 · Subah 5-10 baje</div>
+                </div>
+                <span class="lopen">KHULA</span>
+              </div>
+            </div>
+
+            <div class="audio-bar">
+              <div style="width:28px;height:28px;border-radius:9px;background:#7B5BFF;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(123,91,255,.4);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+              </div>
+              <div>
+                <div class="ab-text">Bhaiya se puchho</div>
+                <div class="ab-sub">Audio guide — Hindi mein suniye</div>
+              </div>
+              <div class="ab-play">
+                <svg width="9" height="10" viewBox="0 0 10 12" fill="#fff"><path d="M1 1l8 5-8 5V1z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottomnav">
+            <div class="lnav active">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7B5BFF" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span class="lnav-lbl" style="color:#7B5BFF;">Home</span>
+            </div>
+            <div class="lnav">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0bbd8" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              <span class="lnav-lbl">Naksha</span>
+            </div>
+            <div class="lnav">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0bbd8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <span class="lnav-lbl">Dhundho</span>
+            </div>
+            <div class="lnav">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0bbd8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              <span class="lnav-lbl">Jodo</span>
+            </div>
+          </div>
+        </div><!-- /light-screen -->
+      </div>
+      <div class="style-cap">Pearl Violet</div>
+      <div class="style-sub">Light glassmorphism · Deep purple hero · Clean cards</div>
+    </div>
+
+  </div><!-- /phones-row -->
+
+  <p class="footer-note">Syne + Plus Jakarta Sans · Inline SVG icons · Glassmorphism · Production-ready system</p>
+</div>
+</body>
+</html>
