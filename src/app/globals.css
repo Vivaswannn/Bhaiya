@@ -17,3 +17,9 @@
 .dark {
   color-scheme: dark;
 }
+
+/* Light mode overrides */
+:root:not(.dark) body {
+  background-color: #f5f4fe;
+  color: #1a1035;
+}
