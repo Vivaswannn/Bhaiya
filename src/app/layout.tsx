@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${jakarta.variable}`}>
+    <html lang="hi" className={`${syne.variable} ${jakarta.variable}`}>
       <body className="antialiased">
         {children}
       </body>

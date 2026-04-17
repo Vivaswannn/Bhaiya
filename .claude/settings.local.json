@@ -19,7 +19,8 @@
       "Bash(node -e \"const s = require\\('./node_modules/@jest/schemas/build/index.js'\\); console.log\\(JSON.stringify\\(s\\)\\)\")",
       "Bash(npx tsc *)",
       "Bash(npx jest *)",
-      "Bash(git init *)"
+      "Bash(git init *)",
+      "Bash(node -e \"const pkg = require\\('./package.json'\\); console.log\\('jest:', pkg.devDependencies.jest, 'ts-jest:', pkg.devDependencies['ts-jest']\\)\")"
     ]
   }
 }
