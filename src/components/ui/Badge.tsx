@@ -2,10 +2,14 @@ import { cn } from '@/lib/utils'
 
 interface StatusBadgeProps {
   open: boolean
+  lang?: string
   className?: string
 }
 
-export function StatusBadge({ open, className }: StatusBadgeProps) {
+export function StatusBadge({ open, lang = 'hi', className }: StatusBadgeProps) {
+  const label = open
+    ? (lang === 'en' ? 'OPEN' : 'KHULA')
+    : (lang === 'en' ? 'CLOSED' : 'BAND')
   return (
     <span
       className={cn(
@@ -16,7 +20,7 @@ export function StatusBadge({ open, className }: StatusBadgeProps) {
         className
       )}
     >
-      {open ? 'KHULA' : 'BAND'}
+      {label}
     </span>
   )
 }

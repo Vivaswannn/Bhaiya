@@ -42,9 +42,9 @@ export default function ContributionsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-bg-dark p-6 font-jakarta">
-      <h1 className="font-syne text-xl font-bold text-white mb-4">Pending Contributions ({contributions.length})</h1>
-      {loading && <p className="text-white/40 text-sm">Loading...</p>}
+    <main className="min-h-screen bg-gray-50 dark:bg-bg-dark p-6 font-jakarta">
+      <h1 className="font-syne text-xl font-bold text-gray-900 dark:text-white mb-4">Pending Contributions ({contributions.length})</h1>
+      {loading && <p className="text-gray-400 dark:text-white/40 text-sm">Loading...</p>}
       <div className="flex flex-col gap-4">
         {contributions.map(c => {
           const d = c.shop_data as any

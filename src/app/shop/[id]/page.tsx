@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { getShopById, isOpenNow } from '@/lib/geo'
 import { getDemoShop } from '@/lib/demo-shops'
 import { Shop } from '@/lib/types'
+import { supabase } from '@/lib/supabase'
 import { StatusBadge, CategoryBadge } from '@/components/ui/Badge'
 import { CategoryIcon } from '@/components/shop/CategoryIcon'
 import { BhaiyaAudioButton } from '@/components/audio/BhaiyaAudioButton'
@@ -105,7 +106,7 @@ export default function ShopDetailPage() {
                 )}
               </div>
             </div>
-            <StatusBadge open={open} className="mt-1" />
+            <StatusBadge open={open} lang={lang} className="mt-1" />
           </div>
 
           {shop.address && (
@@ -126,7 +127,14 @@ export default function ShopDetailPage() {
 
         {shop.phone && (
           <div className="mx-5 mt-3 flex gap-2">
-            <a href={`tel:${shop.phone}`} className="flex-1">
+            <a
+              href={`tel:${shop.phone}`}
+              className="flex-1"
+              onClick={() => {
+                if (!id.startsWith('demo-'))
+                  supabase.from('call_events').insert({ shop_id: id, ts: new Date().toISOString() })
+              }}
+            >
               <Button variant="primary" size="lg" className="w-full">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.61 19.79 19.79 0 01.09 1a2 2 0 012-2.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 6.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
@@ -137,6 +145,10 @@ export default function ShopDetailPage() {
             <a
               href={`https://wa.me/${shop.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(lang === 'en' ? `Hi! I found your shop on Bhaiya App.` : `Namaste! Maine aapki dukaan Bhaiya App par dekhi.`)}`}
               target="_blank" rel="noopener noreferrer"
+              onClick={() => {
+                if (!id.startsWith('demo-'))
+                  supabase.from('call_events').insert({ shop_id: id, ts: new Date().toISOString() })
+              }}
               className="flex items-center justify-center gap-1.5 bg-[#25D366]/20 border border-[#25D366]/40 text-[#25D366] rounded-2xl px-4 font-semibold text-xs"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

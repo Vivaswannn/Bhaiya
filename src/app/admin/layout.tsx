@@ -15,7 +15,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [])
 
   if (checking) {
-    return <div className="min-h-screen bg-bg-dark flex items-center justify-center text-white/40 text-sm">Loading...</div>
+    return <div className="min-h-screen bg-gray-50 dark:bg-bg-dark flex items-center justify-center text-gray-400 dark:text-white/40 text-sm">Loading...</div>
   }
 
   return <>{children}</>

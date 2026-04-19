@@ -7,6 +7,29 @@
   "orientation": "portrait",
   "background_color": "#07071c",
   "theme_color": "#7B5BFF",
+  "shortcuts": [
+    {
+      "name": "Search Shops",
+      "short_name": "Search",
+      "description": "Search for shops near you",
+      "url": "/search",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Map View",
+      "short_name": "Map",
+      "description": "See shops on the map",
+      "url": "/map",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Add Your Shop",
+      "short_name": "Add Shop",
+      "description": "List your shop for free",
+      "url": "/add",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",

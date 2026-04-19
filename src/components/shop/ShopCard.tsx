@@ -1,8 +1,10 @@
+'use client'
 import Link from 'next/link'
 import { Shop } from '@/lib/types'
 import { distanceLabel, isOpenNow } from '@/lib/geo'
 import { StatusBadge } from '@/components/ui/Badge'
 import { CategoryIcon } from './CategoryIcon'
+import { useLang } from '@/lib/lang'
 
 interface ShopCardProps {
   shop: Shop
@@ -10,6 +12,7 @@ interface ShopCardProps {
 }
 
 export function ShopCard({ shop, categorySlug }: ShopCardProps) {
+  const { lang } = useLang()
   const open = isOpenNow(shop.opening_hours)
   const slug = categorySlug ?? shop.category?.slug ?? 'more'
   return (
@@ -30,7 +33,7 @@ export function ShopCard({ shop, categorySlug }: ShopCardProps) {
           {shop.area && ` · ${shop.area}`}
         </p>
       </div>
-      <StatusBadge open={open} />
+      <StatusBadge open={open} lang={lang} />
     </Link>
   )
 }
