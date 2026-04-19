@@ -1,23 +1,29 @@
 -- ============================================================
 -- Bhaiya App — one-time Supabase setup
 -- Run in: Supabase dashboard > SQL Editor
+-- Safe to run multiple times (idempotent, no DROP statements)
 -- ============================================================
 
 -- 1. Row Level Security on contributions
---    Allow anonymous inserts (public shop submissions), no public reads
 ALTER TABLE contributions ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "allow_anon_insert" ON contributions;
-CREATE POLICY "allow_anon_insert" ON contributions
-  FOR INSERT TO anon, authenticated WITH CHECK (true);
+DO $$ BEGIN
+  CREATE POLICY "allow_anon_insert" ON contributions
+    FOR INSERT TO anon, authenticated WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-DROP POLICY IF EXISTS "allow_auth_select" ON contributions;
-CREATE POLICY "allow_auth_select" ON contributions
-  FOR SELECT TO authenticated USING (true);
+DO $$ BEGIN
+  CREATE POLICY "allow_auth_select" ON contributions
+    FOR SELECT TO authenticated USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-DROP POLICY IF EXISTS "allow_auth_update" ON contributions;
-CREATE POLICY "allow_auth_update" ON contributions
-  FOR UPDATE TO authenticated USING (true);
+DO $$ BEGIN
+  CREATE POLICY "allow_auth_update" ON contributions
+    FOR UPDATE TO authenticated USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- 2. call_events table — track call/WhatsApp taps per shop
 CREATE TABLE IF NOT EXISTS call_events (
@@ -28,15 +34,19 @@ CREATE TABLE IF NOT EXISTS call_events (
 
 ALTER TABLE call_events ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "allow_anon_insert_calls" ON call_events;
-CREATE POLICY "allow_anon_insert_calls" ON call_events
-  FOR INSERT TO anon, authenticated WITH CHECK (true);
+DO $$ BEGIN
+  CREATE POLICY "allow_anon_insert_calls" ON call_events
+    FOR INSERT TO anon, authenticated WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-DROP POLICY IF EXISTS "allow_auth_select_calls" ON call_events;
-CREATE POLICY "allow_auth_select_calls" ON call_events
-  FOR SELECT TO authenticated USING (true);
+DO $$ BEGIN
+  CREATE POLICY "allow_auth_select_calls" ON call_events
+    FOR SELECT TO authenticated USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
--- 3. Admin view: shops with 3+ call events (featured outreach trigger)
+-- 3. Admin view: shops ranked by call count (featured outreach trigger)
 CREATE OR REPLACE VIEW shops_with_call_counts AS
   SELECT s.id, s.name, s.phone, s.area, s.featured,
          COUNT(ce.id) AS call_count
@@ -46,7 +56,6 @@ CREATE OR REPLACE VIEW shops_with_call_counts AS
   ORDER BY call_count DESC;
 
 -- 4. insert_shop_from_contribution RPC
---    Called by admin panel when approving a contribution
 CREATE OR REPLACE FUNCTION insert_shop_from_contribution(
   p_name        text,
   p_category_id uuid,
