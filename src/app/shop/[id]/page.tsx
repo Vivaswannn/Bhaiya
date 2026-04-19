@@ -42,9 +42,11 @@ export default function ShopDetailPage() {
     back: lang === 'en' ? 'Back' : 'Wapas',
     call: lang === 'en' ? 'Call' : 'Call karo',
     hours: lang === 'en' ? 'Opening Hours' : 'Khulne ka waqt',
+    directions: lang === 'en' ? 'Get Directions' : 'Raasta batao',
     report: lang === 'en' ? 'Wrong info? Report it' : 'Galat info hai? Report karo',
     loading: lang === 'en' ? 'Loading...' : 'Load ho raha hai...',
     notFound: lang === 'en' ? 'Shop not found' : 'Shop nahi mili',
+    featuredBadge: lang === 'en' ? '⭐ Featured Shop' : '⭐ Featured Dukaan',
   }
 
   const DAY = lang === 'en' ? DAY_EN : DAY_HI
@@ -123,14 +125,25 @@ export default function ShopDetailPage() {
         </div>
 
         {shop.phone && (
-          <div className="mx-5 mt-3">
-            <a href={`tel:${shop.phone}`}>
+          <div className="mx-5 mt-3 flex gap-2">
+            <a href={`tel:${shop.phone}`} className="flex-1">
               <Button variant="primary" size="lg" className="w-full">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.61 19.79 19.79 0 01.09 1a2 2 0 012-2.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 6.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
                 </svg>
-                {T.call}: {shop.phone}
+                {T.call}
               </Button>
+            </a>
+            <a
+              href={`https://wa.me/${shop.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(lang === 'en' ? `Hi! I found your shop on Bhaiya App.` : `Namaste! Maine aapki dukaan Bhaiya App par dekhi.`)}`}
+              target="_blank" rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 bg-[#25D366]/20 border border-[#25D366]/40 text-[#25D366] rounded-2xl px-4 font-semibold text-xs"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.528 5.845L.057 23.625a.75.75 0 00.918.918l5.78-1.471A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.694-.513-5.228-1.407l-.374-.217-3.882.988.988-3.882-.217-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+              </svg>
+              WhatsApp
             </a>
           </div>
         )}
@@ -146,6 +159,28 @@ export default function ShopDetailPage() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {shop.lat && shop.lng && (
+          <div className="mx-5 mt-3">
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${shop.lat},${shop.lng}`}
+              target="_blank" rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl px-4 py-3 text-[11px] font-semibold text-gray-700 dark:text-white/70"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+              {T.directions}
+            </a>
+          </div>
+        )}
+
+        {shop.featured && (
+          <div className="mx-5 mt-3 flex items-center justify-center gap-1.5 py-2 bg-amber-400/10 border border-amber-400/30 rounded-2xl">
+            <span className="text-[10px] font-bold text-amber-500">{T.featuredBadge}</span>
+            <span className="text-[9px] text-amber-500/60">· Sponsored listing</span>
           </div>
         )}
 

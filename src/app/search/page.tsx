@@ -13,13 +13,14 @@ type SortKey = 'distance' | 'rating'
 
 export default function SearchPage() {
   const { lang } = useLang()
-  const [allShops, setAllShops] = useState<Shop[]>([])
+  const [allShops, setAllShops] = useState<Shop[]>(DEMO_SHOPS)
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCat, setSelectedCat] = useState<string | null>(null)
   const [sort, setSort] = useState<SortKey>('distance')
   const [query, setQuery] = useState('')
   const [location, setLocation] = useState<[number, number]>([26.8467, 80.9462])
-  const [usingDemo, setUsingDemo] = useState(false)
+  const [usingDemo, setUsingDemo] = useState(true)
+  const [listening, setListening] = useState(false)
 
   useEffect(() => {
     supabase.from('categories').select('*').then(({ data }) => { if (data) setCategories(data) })
@@ -35,11 +36,33 @@ export default function SearchPage() {
         setAllShops(shops)
         setUsingDemo(false)
       } else {
-        setAllShops(DEMO_SHOPS)
+        const base = selectedCat
+          ? DEMO_SHOPS.filter(s => s.category?.slug === selectedCat)
+          : DEMO_SHOPS
+        setAllShops(base)
         setUsingDemo(true)
       }
-    }).catch(() => { setAllShops(DEMO_SHOPS); setUsingDemo(true) })
+    }).catch(() => {
+      const base = selectedCat
+        ? DEMO_SHOPS.filter(s => s.category?.slug === selectedCat)
+        : DEMO_SHOPS
+      setAllShops(base)
+      setUsingDemo(true)
+    })
   }, [location, selectedCat])
+
+  function startVoice() {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SR) return
+    const rec = new SR()
+    rec.lang = lang === 'hi' ? 'hi-IN' : 'en-IN'
+    rec.interimResults = false
+    rec.onresult = (e: any) => setQuery(e.results[0][0].transcript)
+    rec.onend = () => setListening(false)
+    rec.onerror = () => setListening(false)
+    rec.start()
+    setListening(true)
+  }
 
   const getCategorySlug = (categoryId: string | null) =>
     categories.find(c => c.id === categoryId)?.slug ?? 'more'
@@ -66,6 +89,7 @@ export default function SearchPage() {
     bestRated: lang === 'en' ? 'Best Rated' : 'Best Rating',
     noResults: lang === 'en' ? 'No shops found' : 'Koi shop nahi mili',
     demo: lang === 'en' ? 'Demo data' : 'Demo data',
+    voiceHint: lang === 'en' ? 'Listening...' : 'Bol rahe hain...',
   }
 
   return (
@@ -88,11 +112,21 @@ export default function SearchPage() {
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder={T.placeholder}
+            placeholder={listening ? T.voiceHint : T.placeholder}
             className="flex-1 bg-transparent text-[11px] text-gray-700 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 outline-none"
           />
-          {query && (
+          {query ? (
             <button onClick={() => setQuery('')} className="text-gray-400 dark:text-white/30 text-xs">✕</button>
+          ) : (
+            <button
+              onClick={startVoice}
+              className={`transition-colors ${listening ? 'text-violet animate-pulse' : 'text-gray-400 dark:text-white/30'}`}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+              </svg>
+            </button>
           )}
         </div>
 

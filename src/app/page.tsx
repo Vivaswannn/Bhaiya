@@ -17,11 +17,11 @@ export default function HomePage() {
   const router = useRouter()
   const { lang } = useLang()
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
-  const [shops, setShops] = useState<Shop[]>([])
+  const [shops, setShops] = useState<Shop[]>(DEMO_SHOPS)
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCat, setSelectedCat] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [usingDemo, setUsingDemo] = useState(false)
+  const [usingDemo, setUsingDemo] = useState(true)
 
   useEffect(() => {
     if (!localStorage.getItem('bhaiya_onboarded')) {
@@ -40,10 +40,17 @@ export default function HomePage() {
     setLoading(true)
     try {
       const nearby = await getNearbyShops(lat, lng, 2000)
-      if (nearby.length > 0) { setShops(nearby); setUsingDemo(false) }
-      else { setShops(DEMO_SHOPS); setUsingDemo(true) }
+      if (nearby.length > 0) {
+        setShops(nearby)
+        setUsingDemo(false)
+        setSelectedCat(null)
+      } else {
+        setShops(DEMO_SHOPS)
+        setUsingDemo(true)
+      }
     } catch {
-      setShops(DEMO_SHOPS); setUsingDemo(true)
+      setShops(DEMO_SHOPS)
+      setUsingDemo(true)
     } finally {
       setLoading(false)
     }
@@ -51,35 +58,41 @@ export default function HomePage() {
 
   const handleCategorySelect = useCallback(async (slug: string | null) => {
     setSelectedCat(slug)
+
+    if (usingDemo) {
+      const filtered = slug
+        ? DEMO_SHOPS.filter(s => s.category?.slug === slug)
+        : DEMO_SHOPS
+      setShops(filtered)
+      return
+    }
+
     if (!location) return
     setLoading(true)
     try {
       const nearby = await getNearbyShops(location.lat, location.lng, 2000, slug ?? undefined)
-      if (nearby.length > 0) { setShops(nearby); setUsingDemo(false) }
-      else { setShops(slug ? [] : DEMO_SHOPS); setUsingDemo(!slug) }
+      setShops(nearby.length > 0 ? nearby : (slug ? [] : DEMO_SHOPS))
+      setUsingDemo(nearby.length === 0 && !slug)
     } catch {
-      setShops(DEMO_SHOPS); setUsingDemo(true)
+      setShops(DEMO_SHOPS)
+      setUsingDemo(true)
     } finally {
       setLoading(false)
     }
-  }, [location])
-
-  const getCategorySlug = (categoryId: string | null) =>
-    categories.find(c => c.id === categoryId)?.slug ?? 'more'
+  }, [location, usingDemo])
 
   const T = {
     search: lang === 'en' ? 'Search shops, areas...' : 'Kya dhundh rahe ho?',
     categories: lang === 'en' ? 'Categories' : 'श्रेणियाँ',
     seeAll: lang === 'en' ? 'See all →' : 'Sab dekho →',
-    nearby: lang === 'en' ? 'Open nearby' : 'Aas-paas khule hain',
+    nearby: lang === 'en' ? 'Nearby Shops' : 'Aas-paas ki Dukaanein',
     loading: lang === 'en' ? 'Finding shops...' : 'Dhundh rahe hain...',
-    noShops: lang === 'en' ? 'No shops found here.' : 'Is area mein koi shop nahi mili.',
-    addOne: lang === 'en' ? 'Add one?' : 'Kya aap ek jodenge?',
-    allowLocation: lang === 'en' ? 'Allow location to see nearby shops' : 'Location allow karein shops dekhne ke liye',
-    demo: lang === 'en' ? 'Demo · Connect Supabase for live data' : 'Demo · Live data ke liye Supabase jodein',
+    noShops: lang === 'en' ? 'No shops in this category nearby.' : 'Is category mein koi shop nahi.',
+    demo: lang === 'en' ? 'Demo · Add real data via Supabase' : 'Demo data',
     claimTitle: lang === 'en' ? 'Own a shop in Lucknow?' : 'Lucknow mein dukaan hai?',
-    claimSub: lang === 'en' ? 'List it free — early access' : 'Free mein add karo — early access',
+    claimSub: lang === 'en' ? 'List it free — be found by thousands' : 'Free mein add karo — hazaaron log dekhenge',
     claimBtn: lang === 'en' ? 'Add your shop →' : 'Apni dukaan jodein →',
+    featuredNote: lang === 'en' ? '⭐ Featured shops get 5× more calls' : '⭐ Featured dukaanon ko 5× zyada calls milti hain',
     audio: lang === 'en'
       ? 'Welcome to Bhaiya App! Find grocery, vegetables, dairy, medicines — all local shops near you with one tap.'
       : 'Bhaiya App mein aapka swagat hai! Apne aas-paas ki dukaanein dhundhen aur unke malik se seedha baat karein.',
@@ -119,6 +132,7 @@ export default function HomePage() {
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <span className="text-[11px] text-gray-400 dark:text-white/30 flex-1">{T.search}</span>
+          <span className="text-[9px] text-violet font-semibold">🎤</span>
         </Link>
 
         {/* Categories */}
@@ -142,32 +156,28 @@ export default function HomePage() {
           <div className="px-5 text-[11px] text-gray-400 dark:text-white/30 text-center py-4">{T.loading}</div>
         )}
 
-        {!loading && shops.length === 0 && location && (
+        {!loading && shops.length === 0 && (
           <div className="px-5 text-[11px] text-gray-400 dark:text-white/30 text-center py-6">
-            {T.noShops} <br />
-            <Link href="/add" className="text-violet">{T.addOne}</Link>
-          </div>
-        )}
-
-        {!location && (
-          <div className="px-5 text-[11px] text-gray-400 dark:text-white/30 text-center py-6">
-            {T.allowLocation}
+            {T.noShops}
           </div>
         )}
 
         <div className="px-5 flex flex-col gap-2.5">
-          {shops.slice(0, 8).map(shop => (
-            <ShopCard key={shop.id} shop={shop} categorySlug={getCategorySlug(shop.category_id)} />
+          {shops.slice(0, 10).map(shop => (
+            <ShopCard key={shop.id} shop={shop} />
           ))}
         </div>
 
         {/* Claim your shop banner */}
-        <Link href="/add" className="mx-5 mt-4 flex items-center justify-between gap-3 bg-violet/[0.08] border border-violet/[0.2] rounded-2xl px-4 py-3">
-          <div>
-            <p className="text-[11px] font-bold text-violet">{T.claimTitle}</p>
-            <p className="text-[9px] text-gray-500 dark:text-white/40 mt-0.5">{T.claimSub}</p>
+        <Link href="/add" className="mx-5 mt-4 flex flex-col gap-1 bg-violet/[0.08] border border-violet/[0.2] rounded-2xl px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-bold text-violet">{T.claimTitle}</p>
+              <p className="text-[9px] text-gray-500 dark:text-white/40 mt-0.5">{T.claimSub}</p>
+            </div>
+            <span className="text-[10px] font-bold text-violet shrink-0">{T.claimBtn}</span>
           </div>
-          <span className="text-[10px] font-bold text-violet shrink-0">{T.claimBtn}</span>
+          <p className="text-[8px] text-amber-500/70">{T.featuredNote}</p>
         </Link>
 
         {/* Audio card */}

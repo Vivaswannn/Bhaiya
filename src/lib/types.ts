@@ -34,6 +34,7 @@ export interface Shop {
   lng: number
   dist_m?: number
   category?: Category
+  featured?: boolean
 }
 
 export interface Contribution {
