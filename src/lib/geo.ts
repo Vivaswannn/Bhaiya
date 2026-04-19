@@ -65,10 +65,11 @@ export async function getShopById(id: string): Promise<Shop | null> {
     .select('*, category:categories(*)')
     .eq('id', id)
     .single()
-  if (error) return null
+  if (error || !data) return null
   return {
     ...data,
-    lat: 0,
-    lng: 0,
+    lat: (data as any).lat ?? 0,
+    lng: (data as any).lng ?? 0,
+    featured: (data as any).featured ?? false,
   }
 }

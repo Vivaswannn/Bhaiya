@@ -31,7 +31,8 @@
       "Bash(git push *)"
     ],
     "additionalDirectories": [
-      "D:\\MummyApp\\src\\app\\shop"
+      "D:\\MummyApp\\src\\app\\shop",
+      "d:\\MummyApp\\src\\app\\shop\\[id]"
     ]
   }
 }

@@ -6,7 +6,9 @@ import { TopBar } from '@/components/layout/TopBar'
 import { BottomNav } from '@/components/layout/BottomNav'
 import { CategoryGrid } from '@/components/shop/CategoryGrid'
 import { ShopCard } from '@/components/shop/ShopCard'
+import { ShopCardSkeleton } from '@/components/shop/ShopCardSkeleton'
 import { BhaiyaAudioButton } from '@/components/audio/BhaiyaAudioButton'
+import { InstallPrompt } from '@/components/layout/InstallPrompt'
 import { getNearbyShops } from '@/lib/geo'
 import { Shop, Category } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
@@ -152,20 +154,24 @@ export default function HomePage() {
           )}
         </div>
 
-        {loading && (
-          <div className="px-5 text-[11px] text-gray-400 dark:text-white/30 text-center py-4">{T.loading}</div>
-        )}
-
-        {!loading && shops.length === 0 && (
-          <div className="px-5 text-[11px] text-gray-400 dark:text-white/30 text-center py-6">
-            {T.noShops}
-          </div>
-        )}
-
         <div className="px-5 flex flex-col gap-2.5">
-          {shops.slice(0, 10).map(shop => (
-            <ShopCard key={shop.id} shop={shop} />
-          ))}
+          {loading
+            ? Array.from({ length: 5 }).map((_, i) => <ShopCardSkeleton key={i} />)
+            : shops.length === 0
+              ? (
+                <div className="flex flex-col items-center gap-3 py-10">
+                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="opacity-20">
+                    <rect x="8" y="14" width="32" height="26" rx="4" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M16 14V10a8 8 0 0116 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <circle cx="24" cy="27" r="3" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  <p className="text-[11px] text-gray-400 dark:text-white/30 text-center">{T.noShops}</p>
+                </div>
+              )
+              : shops.slice(0, 10).map(shop => (
+                <ShopCard key={shop.id} shop={shop} />
+              ))
+          }
         </div>
 
         {/* Claim your shop banner */}
@@ -179,6 +185,9 @@ export default function HomePage() {
           </div>
           <p className="text-[8px] text-amber-500/70">{T.featuredNote}</p>
         </Link>
+
+        {/* Install prompt */}
+        <InstallPrompt />
 
         {/* Audio card */}
         <div className="mx-5 mt-3">

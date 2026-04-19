@@ -1,11 +1,10 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { BottomNav } from '@/components/layout/BottomNav'
 import { CategoryGrid } from '@/components/shop/CategoryGrid'
 import { getNearbyShops } from '@/lib/geo'
-import { Shop, Category } from '@/lib/types'
-import { supabase } from '@/lib/supabase'
+import { Shop } from '@/lib/types'
 import { DEMO_SHOPS } from '@/lib/demo-shops'
 import { useLang } from '@/lib/lang'
 
@@ -16,25 +15,30 @@ const LeafletMap = dynamic(
 
 export default function MapPage() {
   const { lang } = useLang()
-  const [shops, setShops] = useState<Shop[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
+  const [allShops, setAllShops] = useState<Shop[]>(DEMO_SHOPS)
   const [selectedCat, setSelectedCat] = useState<string | null>(null)
   const [center, setCenter] = useState<[number, number]>([26.8467, 80.9462])
 
   useEffect(() => {
-    supabase.from('categories').select('*').then(({ data }) => { if (data) setCategories(data) })
     navigator.geolocation?.getCurrentPosition(pos => {
       const { latitude: lat, longitude: lng } = pos.coords
       setCenter([lat, lng])
-      getNearbyShops(lat, lng, 3000).then(s => setShops(s.length > 0 ? s : DEMO_SHOPS))
-        .catch(() => setShops(DEMO_SHOPS))
+      getNearbyShops(lat, lng, 3000)
+        .then(s => setAllShops(s.length > 0 ? s : DEMO_SHOPS))
+        .catch(() => setAllShops(DEMO_SHOPS))
     }, () => {
-      getNearbyShops(26.8467, 80.9462, 3000).then(s => setShops(s.length > 0 ? s : DEMO_SHOPS))
-        .catch(() => setShops(DEMO_SHOPS))
+      getNearbyShops(26.8467, 80.9462, 3000)
+        .then(s => setAllShops(s.length > 0 ? s : DEMO_SHOPS))
+        .catch(() => setAllShops(DEMO_SHOPS))
     })
   }, [])
 
-  const categoryColors = Object.fromEntries(categories.map(c => [c.slug, c.color]))
+  const visibleShops = useMemo(() =>
+    selectedCat
+      ? allShops.filter(s => s.category?.slug === selectedCat)
+      : allShops,
+    [allShops, selectedCat]
+  )
 
   return (
     <main className="h-screen flex flex-col">
@@ -45,7 +49,7 @@ export default function MapPage() {
         <CategoryGrid selected={selectedCat} onSelect={setSelectedCat} />
       </div>
       <div className="flex-1 relative z-0">
-        <LeafletMap shops={shops} center={center} categoryColors={categoryColors} />
+        <LeafletMap shops={visibleShops} center={center} />
       </div>
       <BottomNav />
     </main>

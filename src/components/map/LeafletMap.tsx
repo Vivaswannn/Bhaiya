@@ -7,11 +7,11 @@ import { getCategoryDef } from '@/lib/categories'
 interface LeafletMapProps {
   shops: Shop[]
   center?: [number, number]
-  categoryColors: Record<string, string>
+  categoryColors?: Record<string, string>
   onShopClick?: (shop: Shop) => void
 }
 
-export function LeafletMap({ shops, center = [26.8467, 80.9462], categoryColors, onShopClick }: LeafletMapProps) {
+export function LeafletMap({ shops, center = [26.8467, 80.9462], onShopClick }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
 
@@ -27,11 +27,7 @@ export function LeafletMap({ shops, center = [26.8467, 80.9462], categoryColors,
         shadowUrl: '/leaflet/marker-shadow.png',
       })
 
-      const map = L.map(mapRef.current, {
-        center,
-        zoom: 14,
-        zoomControl: false,
-      })
+      const map = L.map(mapRef.current, { center, zoom: 14, zoomControl: false })
       mapInstanceRef.current = map
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -52,27 +48,17 @@ export function LeafletMap({ shops, center = [26.8467, 80.9462], categoryColors,
     if (!mapInstanceRef.current) return
     import('leaflet').then(L => {
       const map = mapInstanceRef.current
-      map.eachLayer((layer: any) => {
-        if (layer._bhaiyaShop) map.removeLayer(layer)
-      })
+      map.eachLayer((layer: any) => { if (layer._bhaiyaShop) map.removeLayer(layer) })
 
       shops.forEach(shop => {
-        const def = getCategoryDef(
-          Object.keys(categoryColors).find(slug =>
-            categoryColors[slug] === (shop.category as any)?.color
-          ) ?? 'more'
-        )
+        const slug = shop.category?.slug ?? 'more'
+        const def = getCategoryDef(slug)
         const color = def?.color ?? '#7B5BFF'
         const open = isOpenNow(shop.opening_hours)
 
         const icon = L.divIcon({
           className: '',
-          html: `<div style="
-            width:28px;height:28px;border-radius:50%;
-            background:${color}33;border:2px solid ${color};
-            display:flex;align-items:center;justify-content:center;
-            box-shadow:0 2px 8px ${color}55;
-          ">
+          html: `<div style="width:28px;height:28px;border-radius:50%;background:${color}33;border:2px solid ${color};display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px ${color}55;">
             <div style="width:8px;height:8px;border-radius:50%;background:${open ? '#00dc64' : '#ff7070'};"></div>
           </div>`,
           iconSize: [28, 28],
