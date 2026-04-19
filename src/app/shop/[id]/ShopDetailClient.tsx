@@ -94,7 +94,7 @@ export function ShopDetailClient({ id }: { id: string }) {
           </button>
         </div>
 
-        <div className="mx-5 bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.07] dark:border-white/[0.08] rounded-3xl p-5 backdrop-blur-xl">
+        <div className="mx-5 bg-white/70 dark:bg-white/[0.05] border border-white/90 dark:border-white/[0.08] shadow-[0_4px_24px_rgba(123,91,255,0.07)] dark:shadow-none rounded-3xl p-5 backdrop-blur-xl">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <CategoryIcon slug={categorySlug} size={24} withBg />
@@ -160,7 +160,7 @@ export function ShopDetailClient({ id }: { id: string }) {
         )}
 
         {shop.opening_hours && Object.keys(shop.opening_hours).length > 0 && (
-          <div className="mx-5 mt-3 bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl">
+          <div className="mx-5 mt-3 bg-white/70 dark:bg-white/[0.05] border border-white/90 dark:border-white/[0.08] shadow-[0_4px_24px_rgba(123,91,255,0.07)] dark:shadow-none rounded-2xl p-4 backdrop-blur-xl">
             <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-white/30 mb-3">{T.hours}</p>
             <div className="space-y-1.5">
               {Object.entries(shop.opening_hours).map(([day, hours]) => (
@@ -178,7 +178,7 @@ export function ShopDetailClient({ id }: { id: string }) {
             <a
               href={`https://www.google.com/maps/dir/?api=1&destination=${shop.lat},${shop.lng}`}
               target="_blank" rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl px-4 py-3 text-[11px] font-semibold text-gray-700 dark:text-white/70"
+              className="flex items-center justify-center gap-2 bg-white/70 dark:bg-white/[0.05] border border-white/90 dark:border-white/[0.08] shadow-[0_4px_24px_rgba(123,91,255,0.07)] dark:shadow-none rounded-2xl px-4 py-3 text-[11px] font-semibold text-gray-700 dark:text-white/70"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <polygon points="3 11 22 2 13 21 11 13 3 11"/>
@@ -208,7 +208,7 @@ export function ShopDetailClient({ id }: { id: string }) {
               text: `${lang === 'en' ? 'Found this shop on Bhaiya App' : 'Bhaiya App par yeh dukaan mili'}: ${shop.name}${shop.area ? `, ${shop.area}` : ''}`,
               url: window.location.href,
             })}
-            className="w-full flex items-center justify-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl px-4 py-3 text-[11px] font-semibold text-gray-600 dark:text-white/60"
+            className="w-full flex items-center justify-center gap-2 bg-white/70 dark:bg-white/[0.05] border border-white/90 dark:border-white/[0.08] shadow-[0_4px_24px_rgba(123,91,255,0.07)] dark:shadow-none rounded-2xl px-4 py-3 text-[11px] font-semibold text-gray-600 dark:text-white/60"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>

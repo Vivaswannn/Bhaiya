@@ -2,12 +2,15 @@
 import { useState, useEffect } from 'react'
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(true)
+  const [dark, setDark] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('bhaiya_theme')
-    if (saved === 'light') {
-      setDark(false)
+    const isDark = saved === 'dark'
+    setDark(isDark)
+    if (isDark) {
+      document.documentElement.classList.add('dark')
+    } else {
       document.documentElement.classList.remove('dark')
     }
   }, [])
@@ -28,7 +31,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label="Toggle theme"
-      className="w-8 h-8 rounded-xl bg-black/[0.06] dark:bg-white/[0.06] border border-black/10 dark:border-white/10 flex items-center justify-center text-gray-700 dark:text-white/70"
+      className="w-8 h-8 rounded-xl bg-black/[0.06] dark:bg-white/[0.06] border border-black/10 dark:border-white/10 flex items-center justify-center text-gray-600 dark:text-white/70"
     >
       {dark ? (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

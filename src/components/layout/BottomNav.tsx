@@ -51,7 +51,7 @@ export function BottomNav() {
   const pathname = usePathname()
   const { lang } = useLang()
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-bg-dark/90 dark:bg-bg-dark/90 backdrop-blur-2xl border-t border-black/[0.07] dark:border-white/[0.06] flex pb-safe">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/85 dark:bg-bg-dark/90 backdrop-blur-2xl border-t border-black/[0.05] dark:border-white/[0.06] flex pb-safe shadow-[0_-8px_32px_rgba(0,0,0,0.06)] dark:shadow-none">
       {NAV_ITEMS.map(item => {
         const active = pathname === item.href
         return (

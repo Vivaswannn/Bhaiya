@@ -18,7 +18,7 @@ export function ShopCard({ shop, categorySlug }: ShopCardProps) {
   return (
     <Link
       href={`/shop/${shop.id}`}
-      className="flex items-center gap-3 bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.07] dark:border-white/[0.08] rounded-2xl p-3 backdrop-blur-xl active:scale-[0.98] transition-transform relative overflow-hidden"
+      className={`flex items-center gap-3 bg-white/70 dark:bg-white/[0.05] border border-white/90 dark:border-white/[0.08] rounded-2xl p-3 backdrop-blur-xl active:scale-[0.98] transition-all relative overflow-hidden ${shop.featured ? 'shadow-[0_4px_28px_rgba(123,91,255,0.16)]' : 'shadow-[0_2px_16px_rgba(0,0,0,0.06)] dark:shadow-none'}`}
     >
       {shop.featured && (
         <div className="absolute top-0 right-0 bg-amber-400 text-[7px] font-black text-amber-900 px-2 py-0.5 rounded-bl-xl tracking-wider">

@@ -32,7 +32,7 @@ export default function ClaimPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const wa = `https://wa.me/919999999999?text=${encodeURIComponent(
+    const wa = `https://wa.me/918726234200?text=${encodeURIComponent(
       `Claim request:\nShop: ${shopName}\nPhone: ${phone}`
     )}`
     window.open(wa, '_blank')
@@ -43,7 +43,7 @@ export default function ClaimPage() {
     <main className="min-h-screen pb-24 px-5 pt-12">
       <button onClick={() => router.back()} className="text-[11px] text-gray-400 dark:text-white/40 mb-6 flex items-center gap-1.5">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
+          <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
         Back
       </button>
@@ -52,7 +52,7 @@ export default function ClaimPage() {
         <div className="flex flex-col items-center gap-4 pt-12 text-center">
           <div className="w-16 h-16 rounded-3xl bg-open-green/10 flex items-center justify-center">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-open-green">
-              <polyline points="20 6 9 17 4 12"/>
+              <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
           <h1 className="font-syne text-xl font-bold text-gray-900 dark:text-white">{T.successTitle}</h1>

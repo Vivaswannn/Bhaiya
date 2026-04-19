@@ -55,8 +55,8 @@ export default function OnboardingPage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-8 relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute w-96 h-96 rounded-full -top-20 left-1/2 -translate-x-1/2 bg-violet/20 blur-[100px]" />
-        <div className="absolute w-64 h-64 rounded-full bottom-20 -right-10 bg-rose/10 blur-[80px]" />
+        <div className="absolute w-96 h-96 rounded-full -top-20 left-1/2 -translate-x-1/2 bg-violet/[0.08] dark:bg-violet/20 blur-[100px]" />
+        <div className="absolute w-64 h-64 rounded-full bottom-20 -right-10 bg-rose/[0.05] dark:bg-rose/10 blur-[80px]" />
       </div>
 
       <div className="absolute top-6 right-6">

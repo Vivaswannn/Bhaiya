@@ -103,8 +103,8 @@ export default function HomePage() {
   return (
     <main className="min-h-screen relative overflow-hidden pb-24">
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute w-[500px] h-[500px] rounded-full -top-32 -left-20 bg-violet/[0.12] blur-[100px] animate-pulse" />
-        <div className="absolute w-[350px] h-[350px] rounded-full top-60 -right-16 bg-rose/[0.06] blur-[80px]" />
+        <div className="absolute w-[500px] h-[500px] rounded-full -top-32 -left-20 bg-violet/[0.06] dark:bg-violet/[0.12] blur-[100px] animate-pulse" />
+        <div className="absolute w-[350px] h-[350px] rounded-full top-60 -right-16 bg-rose/[0.03] dark:bg-rose/[0.06] blur-[80px]" />
       </div>
 
       <div className="relative z-10">
@@ -129,7 +129,7 @@ export default function HomePage() {
         </div>
 
         {/* Search bar */}
-        <Link href="/search" className="mx-5 mt-3 flex items-center gap-2.5 bg-black/[0.04] dark:bg-white/[0.055] border border-black/[0.07] dark:border-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-2xl">
+        <Link href="/search" className="mx-5 mt-3 flex items-center gap-2.5 bg-white/80 dark:bg-white/[0.055] border border-white/90 dark:border-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-2xl shadow-[0_2px_12px_rgba(0,0,0,0.05)] dark:shadow-none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-gray-400 dark:text-white/30">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>

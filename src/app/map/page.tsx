@@ -42,7 +42,7 @@ export default function MapPage() {
 
   return (
     <main className="h-screen flex flex-col">
-      <div className="px-5 pt-10 pb-3 bg-bg-light/90 dark:bg-bg-dark/90 backdrop-blur-xl border-b border-black/[0.06] dark:border-white/[0.06] z-10">
+      <div className="px-5 pt-10 pb-3 bg-white/80 dark:bg-bg-dark/90 backdrop-blur-2xl border-b border-black/[0.05] dark:border-white/[0.06] shadow-[0_4px_16px_rgba(0,0,0,0.04)] dark:shadow-none z-10">
         <h2 className="font-syne text-base font-bold text-gray-900 dark:text-white mb-2">
           {lang === 'en' ? 'Map' : 'नक्शा'}
         </h2>

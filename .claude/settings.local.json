@@ -28,7 +28,9 @@
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --msg-filter 'sed \"/Co-[Aa]uthored-[Bb]y: Claude/d\"' -- --all)",
       "Bash(git stash *)",
       "Bash(git remote *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Skill(office-hours)",
+      "Skill(office-hours:*)"
     ],
     "additionalDirectories": [
       "D:\\MummyApp\\src\\app\\shop",
