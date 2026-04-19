@@ -218,7 +218,15 @@ export function ShopDetailClient({ id }: { id: string }) {
           </button>
         </div>
 
-        <div className="mx-5 mt-3 text-center">
+        <div className="mx-5 mt-3 text-center flex flex-col gap-2">
+          {!shop.featured && (
+            <Link
+              href={`/claim?shop=${encodeURIComponent(shop.name)}`}
+              className="text-[10px] font-semibold text-violet/70 hover:text-violet transition-colors"
+            >
+              {lang === 'en' ? 'Is this your shop? Claim it →' : 'Kya yeh aapki dukaan hai? Claim karein →'}
+            </Link>
+          )}
           <Link href={`/add?report=${shop.id}`} className="text-[10px] text-gray-300 dark:text-white/25 hover:text-gray-500 dark:hover:text-white/50 transition-colors">
             {T.report}
           </Link>
