@@ -1,10 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useLang } from '@/lib/lang'
 import { BottomNav } from '@/components/layout/BottomNav'
 
-export default function ClaimPage() {
+function ClaimContent() {
   const router = useRouter()
   const params = useSearchParams()
   const shopName = params.get('shop') ?? ''
@@ -100,5 +100,13 @@ export default function ClaimPage() {
       )}
       <BottomNav />
     </main>
+  )
+}
+
+export default function ClaimPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <ClaimContent />
+    </Suspense>
   )
 }
