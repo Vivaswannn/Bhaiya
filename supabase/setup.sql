@@ -46,7 +46,10 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 
--- 3. Admin view: shops ranked by call count (featured outreach trigger)
+-- 3. Add featured column to shops (safe if already exists)
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS featured boolean NOT NULL DEFAULT false;
+
+-- 4. Admin view: shops ranked by call count (featured outreach trigger)
 CREATE OR REPLACE VIEW shops_with_call_counts AS
   SELECT s.id, s.name, s.phone, s.area, s.featured,
          COUNT(ce.id) AS call_count
@@ -55,7 +58,7 @@ CREATE OR REPLACE VIEW shops_with_call_counts AS
   GROUP BY s.id, s.name, s.phone, s.area, s.featured
   ORDER BY call_count DESC;
 
--- 4. insert_shop_from_contribution RPC
+-- 5. insert_shop_from_contribution RPC
 CREATE OR REPLACE FUNCTION insert_shop_from_contribution(
   p_name        text,
   p_category_id uuid,
